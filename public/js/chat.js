@@ -11,18 +11,31 @@ document.querySelector("#send-location").addEventListener("click", () => {
 
   navigator.geolocation.getCurrentPosition((position) => {
     //console.log(position)
-    socket.emit("coords", {
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    })
+    socket.emit(
+      "coords",
+      {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      },
+      (coords) => {
+        console.log(coords)
+      },
+    )
   })
 })
 
 form.addEventListener("submit", (e) => {
   e.preventDefault()
   if (input.value) {
-    console.log("input-value", input.value)
-    socket.emit("chat message", input.value)
+    //console.log("input-value", input.value)
+    // socket.emit("chat message", input.value)
+    socket.emit("chat message", input.value, (msg, error) => {
+      if (error) {
+        return console.log(error)
+      }
+
+      console.log(msg)
+    })
     input.value = ""
   }
 })

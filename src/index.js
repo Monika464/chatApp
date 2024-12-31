@@ -2,7 +2,6 @@ const express = require("express")
 const { createServer } = require("node:http")
 const { join } = require("node:path")
 const { Server } = require("socket.io")
-
 const app = express()
 const server = createServer(app)
 const io = new Server(server)
@@ -20,13 +19,16 @@ io.on("connection", (socket) => {
     // console.log(arg) // 'world'
   })
 
-  socket.on("coords", (position) => {
+  socket.on("coords", (position, callback) => {
     //console.log(position)
     io.emit(
       "chat message",
       `https://google.com/maps?q=${position.latitude}, ${position.longitude}`,
     )
+    callback("Delivered Geocode")
   })
+
+  //dopisz tego callbacka do wysylanej wiadomosci
 
   socket.broadcast.emit("chat message", "ktos dołaczył")
 
@@ -35,44 +37,19 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("chat message", "ktos sie rozłączył")
   })
 
-  socket.on("chat message", (msg) => {
+  socket.on("chat message", async (msg, callback) => {
+    // const { default: Filter } = await import("bad-words")
+    // const filter = new Filter()
+
+    // if (filter.isProfane(msg)) {
+    //   return callback("Profanity is not allowed")
+    // }
+
     io.emit("chat message", msg)
+    callback("Delivered")
   })
 })
 
 server.listen(3000, () => {
   console.log("server running at http://localhost:3000")
 })
-////////////
-// const path = require("path")
-// const http = require("http")
-// const express = require("express")
-// const socketio = require("socket.io")
-
-// const app = express()
-// const server = http.createServer(app)
-// const io = socketio(server)
-
-// const port = process.env.PORT || 3000
-// const publicDirectoryPath = path.join(__dirname, "../public")
-
-// app.use(express.static(publicDirectoryPath))
-
-// io.on("connection", (socket) => {
-//   socket.emit("messageConts", "Welcomme !")
-//   socket.broadcast.emit("messageConst", "A new user has joined")
-
-//   socket.on("sendMessage", (message) => {
-//     //console.log("socket otrzymal mesage", message);
-//     io.emit("message", message)
-//   })
-
-//   socket.on("disconnect", () => {
-//     io.emit("message", "A user has left")
-//   })
-// })
-
-// server.listen(port, () => {
-//   console.log(`Server is up on port ${port}!`)
-// })
-//////////////
