@@ -2,6 +2,8 @@ const express = require("express")
 const { createServer } = require("node:http")
 const { join } = require("node:path")
 const { Server } = require("socket.io")
+const { generateMessage } = require("./utils/messages")
+
 const app = express()
 const server = createServer(app)
 const io = new Server(server)
@@ -20,21 +22,24 @@ io.on("connection", (socket) => {
   })
 
   socket.on("coords", (position, callback) => {
-    //console.log(position)
+    // console.log(position)
+
+    const url = `https://google.com/maps?q=${position.latitude}, ${position.longitude}`
     io.emit(
-      "chat message",
-      `https://google.com/maps?q=${position.latitude}, ${position.longitude}`,
+      // "chat message",
+      "coords message",
+      // `https://google.com/maps?q=${position.latitude}, ${position.longitude}`,
+      url,
     )
     callback("Delivered Geocode")
   })
 
-  //dopisz tego callbacka do wysylanej wiadomosci
-
-  socket.broadcast.emit("chat message", "ktos dołaczył")
+  // socket.broadcast.emit("chat message", "ktos dołaczył")
+  socket.broadcast.emit("chat message", generateMessage("ktos dołaczył"))
 
   socket.on("disconnect", () => {
     console.log("user disconnected")
-    socket.broadcast.emit("chat message", "ktos sie rozłączył")
+    socket.broadcast.emit("chat message", generateMessage("ktos sie rozłączył"))
   })
 
   socket.on("chat message", async (msg, callback) => {
@@ -45,7 +50,7 @@ io.on("connection", (socket) => {
     //   return callback("Profanity is not allowed")
     // }
 
-    io.emit("chat message", msg)
+    io.emit("chat message", generateMessage(msg))
     callback("Delivered")
   })
 })
