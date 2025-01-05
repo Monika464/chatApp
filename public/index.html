@@ -5,35 +5,57 @@
     <!-- <link rel="icon" href="/assets/favicon.ico" /> -->
 
     <title>Socket.IO chat</title>
+    <link rel="icon" href="./img/favicon.png">
+    <link rel="stylesheet" href="./css/styles.min.css">
 
   
   </head>
   <body>
+    <div class="chat">
+      <div class="chat_sidebar">
+<p>aaa</p>
+      </div>
+      <div class="chat__main">
+                <div id="messages2" class="chat__messages"></div>
+                <!-- <ul id="messages"></ul> -->
+                <div id="geocoords" class="chat__messages"></div>
+
+                <div class="compose">
+                        <form id="form" action="">
+                          <input id="input" autocomplete="off" placeholder="Messsage"/>
+                          <button id="form-button">Send</button>
+                        </form>
+                        <br></br>
+                        <button id="send-location">Send location</button>
+                        <br></br>
+
+                </div>
+                
+                
     
-    <div id="messages2"></div>
-    <ul id="messages"></ul>
-    <div id="geocoords"></div>
+      </div>
+    </div>
     
-    <form id="form" action="">
-      <input id="input" autocomplete="off" />
-      <button id="form-button">Send</button>
-    </form>
-<br></br>
-<button id="send-location">Send location</button>
-<br></br>
 
 
 
 <template id="message-template">
-  <div>
-    <p>{{createdAt}} - {{msg}}</p>
+  <div class="message">
+    <p>
+      <span class="message__name">Some user name</span>
+      <span class="message__meta">{{createdAt}}</span>
+    </p>
+    <p>{{msg}}</p>
   </div>
 </template>
 
 <template id="coordinates-template">
   <div>
-    <p>geoposition</p>
-    <p>{{createdAt}} -<a href="{{url}}" target="_blank">Check my current location</a></p>
+    <p>
+      <span class="message__name">Some user name</span>
+      <span class="message__meta">{{createdAt}}</span>
+    </p>
+    <p><a href="{{url}}" target="_blank">Check my current location</a></p>
   </div>
 </template>
 
