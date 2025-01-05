@@ -3,6 +3,7 @@ const { createServer } = require("node:http")
 const { join } = require("node:path")
 const { Server } = require("socket.io")
 const { generateMessage } = require("./utils/messages")
+const { generateLocation } = require("./utils/location")
 
 const app = express()
 const server = createServer(app)
@@ -29,7 +30,7 @@ io.on("connection", (socket) => {
       // "chat message",
       "coords message",
       // `https://google.com/maps?q=${position.latitude}, ${position.longitude}`,
-      url,
+      generateLocation(url),
     )
     callback("Delivered Geocode")
   })

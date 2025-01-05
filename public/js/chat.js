@@ -73,17 +73,20 @@ form.addEventListener("submit", (e) => {
 // })
 
 socket.on("chat message", (msg) => {
-  console.log("msg", msg)
+  //console.log("msg", msg)
   const html = Mustache.render(messageTemplate, {
     msg: msg.text,
-    createdAt: msg.createdAt,
+    createdAt: moment(msg.createdAt).format("h:mm:ss a"),
   })
   messages2.insertAdjacentHTML("beforeend", html)
 })
 
 socket.on("coords message", (pos) => {
-  console.log("Odebrano zdarzenie coords")
-  const html = Mustache.render(coordinatesTemplate, { url: pos })
+  //console.log("Odebrano zdarzenie coords", pos)
+  const html = Mustache.render(coordinatesTemplate, {
+    url: pos.url,
+    createdAt: moment(pos.createdAt).format("h:mm:ss a"),
+  })
   geocoords.insertAdjacentHTML("beforeend", html)
 })
 
