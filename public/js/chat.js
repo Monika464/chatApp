@@ -16,6 +16,13 @@ const coordinatesTemplate = document.querySelector(
   "#coordinates-template",
 ).innerHTML
 
+//option
+const { username, room } = Qs.parse(location.search, {
+  ignoreQueryPrefix: true,
+})
+console.log("userrname i room", username, room)
+//console.log("qs", Qs)
+
 //document.querySelector("#send-location").addEventListener("click", () => {
 locationButton.addEventListener("click", () => {
   if (!navigator.geolocation) {
@@ -65,6 +72,7 @@ form.addEventListener("submit", (e) => {
   }
 })
 
+socket.emit("join", { username, room })
 // socket.on("chat message", (msg) => {
 //   const item = document.createElement("li")
 //   item.textContent = msg
@@ -94,16 +102,16 @@ socket.on("coords message", (pos) => {
 //   console.log("cord", position)
 // })
 
-socket.on("hello", (arg) => {
-  console.log(arg) // 'world'
-})
+// socket.on("hello", (arg) => {
+//   console.log(arg) // 'world'
+// })
 
-socket.on("ktos", (arg2) => {
-  console.log(arg2)
-})
+// socket.on("ktos", (arg2) => {
+//   console.log(arg2)
+// })
 
-socket.on("ktosOff", (arg3) => {
-  console.log(arg3)
-})
+// socket.on("ktosOff", (arg3) => {
+//   console.log(arg3)
+// })
 
-socket.emit("hello", "jozek")
+// socket.emit("hello", "jozek")
