@@ -72,13 +72,15 @@ form.addEventListener("submit", (e) => {
   }
 })
 
-socket.emit("join", { username, room })
-// socket.on("chat message", (msg) => {
-//   const item = document.createElement("li")
-//   item.textContent = msg
-//   messages.appendChild(item)
-//   window.scrollTo(0, document.body.scrollHeight)
-// })
+// socket.emit("join", { username, room })
+socket.emit("join", { username, room }, (error) => {
+  if (error) {
+    alert(error)
+    location.href = "/"
+  } else {
+    console.log("Joined successfully!")
+  }
+})
 
 socket.on("chat message", (msg) => {
   //console.log("msg", msg)

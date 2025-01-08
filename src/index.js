@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 })
 
 io.on("connection", (socket) => {
-  console.log("a user connected")
+  //console.log("a user connected")
 
   // socket.on("hello", (arg) => {
   //   // console.log(arg) // 'world'
@@ -41,20 +41,37 @@ io.on("connection", (socket) => {
     callback("Delivered Geocode")
   })
 
-  socket.on("join", ({ username, room }) => {
-    socket.join(room)
+  socket.on("join", (options, callback) => {
+    const { error, user } = addUser({ id: socket.id, ...options })
+    //const { error, user } = addUser({ id: socket.id, username, room })
+
+    if (error) {
+      return callback(error)
+    }
+
+    socket.join(user.room)
 
     socket.emit("chat message", generateMessage("Welcome"))
     socket.broadcast
-      .to(room)
-      .emit("chat message", generateMessage(`${username} has joined`))
+      .to(user.room)
+      .emit("chat message", generateMessage(`${user.username} has joined`))
+
+    callback()
   })
   // socket.broadcast.emit("chat message", "ktos dołaczył")
   //socket.broadcast.emit("chat message", generateMessage("new user has joined"))
 
   socket.on("disconnect", () => {
-    console.log("user disconnected")
-    socket.broadcast.emit("chat message", generateMessage("ktos sie rozłączył"))
+    const user = removeUser(socket.id)
+    if (user) {
+      io.to(user.room).emit(
+        "chat message",
+        generateMessage(`${user.username} has left`),
+      )
+    }
+
+    // console.log("user disconnected")
+    //socket.broadcast.emit("chat message", generateMessage("ktos sie rozłączył"))
   })
 
   socket.on("chat message", async (msg, callback) => {
