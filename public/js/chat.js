@@ -94,6 +94,7 @@ socket.on("chat message", (msg) => {
 socket.on("coords message", (pos) => {
   //console.log("Odebrano zdarzenie coords", pos)
   const html = Mustache.render(coordinatesTemplate, {
+    username: pos.username,
     url: pos.url,
     createdAt: moment(pos.createdAt).format("h:mm:ss a"),
   })

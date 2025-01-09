@@ -30,13 +30,14 @@ io.on("connection", (socket) => {
 
   socket.on("coords", (position, callback) => {
     // console.log(position)
+    const user = getUser(socket.id)
 
     const url = `https://google.com/maps?q=${position.latitude}, ${position.longitude}`
     io.emit(
       // "chat message",
       "coords message",
       // `https://google.com/maps?q=${position.latitude}, ${position.longitude}`,
-      generateLocation(url),
+      generateLocation(user.username, url),
     )
     callback("Delivered Geocode")
   })
@@ -75,6 +76,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on("chat message", async (msg, callback) => {
+    const user = getUser(socket.id)
     // const { default: Filter } = await import("bad-words")
     // const filter = new Filter()
 
@@ -82,7 +84,7 @@ io.on("connection", (socket) => {
     //   return callback("Profanity is not allowed")
     // }
 
-    io.to("buu").emit("chat message", generateMessage(msg))
+    io.to(user.room).emit("chat message", generateMessage(msg))
     //io.emit("chat message", generateMessage(msg))
     callback("Delivered")
   })
