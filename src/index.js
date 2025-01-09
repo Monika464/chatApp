@@ -52,10 +52,13 @@ io.on("connection", (socket) => {
 
     socket.join(user.room)
 
-    socket.emit("chat message", generateMessage("Welcome"))
+    socket.emit("chat message", generateMessage("admin", "Welcome"))
     socket.broadcast
       .to(user.room)
-      .emit("chat message", generateMessage(`${user.username} has joined`))
+      .emit(
+        "chat message",
+        generateMessage(`admin`, ` ${user.username} has joined`),
+      )
 
     callback()
   })
@@ -67,7 +70,7 @@ io.on("connection", (socket) => {
     if (user) {
       io.to(user.room).emit(
         "chat message",
-        generateMessage(`${user.username} has left`),
+        generateMessage(`admin`, `${user.username} has left`),
       )
     }
 
@@ -83,8 +86,8 @@ io.on("connection", (socket) => {
     // if (filter.isProfane(msg)) {
     //   return callback("Profanity is not allowed")
     // }
-
-    io.to(user.room).emit("chat message", generateMessage(msg))
+    //console.log("co tu", user)
+    io.to(user.room).emit("chat message", generateMessage(user.username, msg))
     //io.emit("chat message", generateMessage(msg))
     callback("Delivered")
   })

@@ -85,6 +85,7 @@ socket.emit("join", { username, room }, (error) => {
 socket.on("chat message", (msg) => {
   //console.log("msg", msg)
   const html = Mustache.render(messageTemplate, {
+    username: msg.username,
     msg: msg.text,
     createdAt: moment(msg.createdAt).format("h:mm:ss a"),
   })
