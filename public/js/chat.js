@@ -15,13 +15,34 @@ const messageTemplate = document.querySelector("#message-template").innerHTML
 const coordinatesTemplate = document.querySelector(
   "#coordinates-template",
 ).innerHTML
+const sidebarTemplate = document.querySelector("#sidebar-template").innerHTML
 
 //option
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 })
-console.log("userrname i room", username, room)
+console.log("username i room", username, room)
 //console.log("qs", Qs)
+
+const autoscroll = () => {
+  const $newMessage = messages2.lastElementChild
+
+  //hight of the new message
+  const newMessageStyles = getComputedStyle($newMessage)
+  const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+  const newMessageHight = $newMessage.offsetHeight + newMessageMargin
+
+  //visible height
+  const visibleHeight = messages2.offsetHeight
+  //height of messages container
+  const containerHeight = messages2.scrollHeight
+  //how far i have scrolled
+  const scrollOffset = messages2.scrollHeight
+
+  if (containerHeight - newMessageHight <= scrollOffset) {
+    messages2.scrollTop = messages2.scrollHeight
+  }
+}
 
 //document.querySelector("#send-location").addEventListener("click", () => {
 locationButton.addEventListener("click", () => {
@@ -90,6 +111,7 @@ socket.on("chat message", (msg) => {
     createdAt: moment(msg.createdAt).format("h:mm:ss a"),
   })
   messages2.insertAdjacentHTML("beforeend", html)
+  autoscroll()
 })
 
 socket.on("coords message", (pos) => {
@@ -100,8 +122,19 @@ socket.on("coords message", (pos) => {
     createdAt: moment(pos.createdAt).format("h:mm:ss a"),
   })
   geocoords.insertAdjacentHTML("beforeend", html)
+  autoscroll()
 })
 
+socket.on("roomData", ({ room, users }) => {
+  const html = Mustache.render(sidebarTemplate, {
+    room,
+    users,
+  })
+  document.querySelector("#sidebar").innerHTML = html
+
+  console.log(room)
+  console.log(users)
+})
 // socket.on("coords message", (position) => {
 //   console.log("cord", position)
 // })

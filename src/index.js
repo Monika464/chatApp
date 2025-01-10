@@ -59,12 +59,16 @@ io.on("connection", (socket) => {
         "chat message",
         generateMessage(`admin`, ` ${user.username} has joined`),
       )
+    io.to(user.room).emit("roomData", {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    })
 
     callback()
   })
   // socket.broadcast.emit("chat message", "ktos dołaczył")
   //socket.broadcast.emit("chat message", generateMessage("new user has joined"))
-
+  //removeUser("iza")
   socket.on("disconnect", () => {
     const user = removeUser(socket.id)
     if (user) {
@@ -72,6 +76,10 @@ io.on("connection", (socket) => {
         "chat message",
         generateMessage(`admin`, `${user.username} has left`),
       )
+      io.to(user.room).emit("roomData", {
+        room: user.room,
+        users: getUsersInRoom(user.room),
+      })
     }
 
     // console.log("user disconnected")

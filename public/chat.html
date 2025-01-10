@@ -10,7 +10,7 @@
   </head>
   <body>
     <div class="chat">
-      <div class="chat_sidebar">
+      <div  id="sidebar" class="chat__sidebar">
 <p>aaa</p>
       </div>
       <div class="chat__main">
@@ -54,6 +54,22 @@
       <span class="message__meta">{{createdAt}}</span>
     </p>
     <p><a href="{{url}}" target="_blank">Check my current location</a></p>
+  </div>
+</template>
+
+<template id="sidebar-template">
+  <div>
+    <p>
+      <h2 class="room-title">{{room}}</h2>
+      <h3 class="list-title">Users</span>
+        <ul class="users">
+          {{#users}}
+          <li>{{username}}</li>
+          {{/users}}
+
+        </ul>
+    </p>
+  
   </div>
 </template>
 

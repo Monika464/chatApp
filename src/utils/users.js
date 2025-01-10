@@ -42,24 +42,24 @@ const getUser = (id) => {
   return users.find((user) => user.id === id)
 }
 
-addUser({
-  id: 22,
-  username: "Helena",
-  room: "buu",
-})
-addUser({
-  id: 33,
-  username: "Iza",
-  room: "buu",
-})
+// addUser({
+//   id: 22,
+//   username: "Helena",
+//   room: "buu",
+// })
+// addUser({
+//   id: 33,
+//   username: "Iza",
+//   room: "buu",
+// })
 
-addUser({
-  id: 44,
-  username: "Monika",
-  room: "muu",
-})
+// addUser({
+//   id: 44,
+//   username: "Monika",
+//   room: "muu",
+// })
 
-const on = getUser(22)
+//const on = getUser(22)
 
 const getUsersInRoom = (room) => {
   room = room.trim().toLowerCase()
