@@ -8,9 +8,10 @@ const locationButton = document.getElementById("send-location")
 const locationLink = document.getElementById("location-link")
 const messages2 = document.querySelector("#messages2")
 const geocoords = document.querySelector("#geocoords")
+const load = document.querySelector("#load")
 
 //templates
-
+const loadTemplate = document.querySelector("#load-template").innerHTML
 const messageTemplate = document.querySelector("#message-template").innerHTML
 const coordinatesTemplate = document.querySelector(
   "#coordinates-template",
@@ -123,6 +124,21 @@ socket.on("coords message", (pos) => {
   })
   geocoords.insertAdjacentHTML("beforeend", html)
   autoscroll()
+})
+
+socket.on("load messages", (load) => {
+  console.log("czy jest load", load)
+
+  load.forEach((lm) => {
+    console.log("lm", lm)
+    const html = Mustache.render(loadTemplate, {
+      username: lm.username,
+      load: lm.text,
+      createdAt: moment(lm.createdAt).format("h:mm:ss a"),
+    })
+    messages2.insertAdjacentHTML("beforeend", html)
+    autoscroll()
+  })
 })
 
 socket.on("roomData", ({ room, users }) => {
