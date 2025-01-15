@@ -13,6 +13,7 @@ const {
 } = require("./utils/users")
 
 const Message = require("./models/message")
+const CoordMessage = require("./models/coordmessage")
 
 const app = express()
 const server = createServer(app)
@@ -30,19 +31,29 @@ io.on("connection", (socket) => {
   // socket.on("hello", (arg) => {
   //   // console.log(arg) // 'world'
   // })
+  //ZAPISYWANIE COORDS
 
-  socket.on("coords", (position, callback) => {
+  socket.on("coords", async (position, callback) => {
     // console.log(position)
     const user = getUser(socket.id)
+    if (!user) return callback("User not found")
 
     const url = `https://google.com/maps?q=${position.latitude}, ${position.longitude}`
-    io.emit(
-      // "chat message",
-      "coords message",
-      // `https://google.com/maps?q=${position.latitude}, ${position.longitude}`,
-      generateLocation(user.username, url),
-    )
-    callback("Delivered Geocode")
+    const locationMessage = generateLocation(user.username, url)
+    try {
+      const coordMessage = new CoordMessage({
+        username: user.username,
+        url,
+        room: user.room,
+        createdAt: locationMessage.createdAt,
+      })
+      await coordMessage.save()
+      console.log("Coord message saved:", coordMessage)
+      io.emit("coords message", generateLocation(user.username, url))
+      callback("Delivered Geocode")
+    } catch (error) {
+      console.error("Error saving coord message:", error)
+    }
   })
 
   socket.on("join", async (options, callback) => {
@@ -55,6 +66,8 @@ io.on("connection", (socket) => {
 
     socket.join(user.room)
 
+    //POBIERANIE I WYSYLANIE WIADOMOSCI ZWYKŁYCH
+
     // Pobierz wiadomości z bazy danych dla tego pokoju
     const messages = await Message.find({ room: user.room }).sort({
       createdAt: 1,
@@ -62,11 +75,20 @@ io.on("connection", (socket) => {
 
     // console.log("gdzie messages", messages)
     try {
-      // Wyślij zapisane wiadomości do nowego użytkownika
       socket.emit("load messages", messages)
     } catch (error) {
       console.error("Error loading messages:", error)
     }
+    //POBIERANIE Z BAZY I  WYSYLANIE COORDS
+    const coordMessages = await CoordMessage.find({ room: user.room })
+    // console.log("cm", coordMessages)
+    try {
+      socket.emit("load cordmessages", coordMessages)
+    } catch (error) {
+      console.error("Error loading coord messages:", error)
+    }
+
+    //POZOSTAŁE
 
     socket.emit(
       "chat message",

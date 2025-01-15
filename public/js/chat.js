@@ -9,8 +9,12 @@ const locationLink = document.getElementById("location-link")
 const messages2 = document.querySelector("#messages2")
 const geocoords = document.querySelector("#geocoords")
 const load = document.querySelector("#load")
+const coordload = document.querySelector("#coordload")
 
 //templates
+const coordloadTemplate = document.querySelector(
+  "#coordload-template",
+).innerHTML
 const loadTemplate = document.querySelector("#load-template").innerHTML
 const messageTemplate = document.querySelector("#message-template").innerHTML
 const coordinatesTemplate = document.querySelector(
@@ -127,16 +131,25 @@ socket.on("coords message", (pos) => {
 })
 
 socket.on("load messages", (load) => {
-  console.log("czy jest load", load)
-
   load.forEach((lm) => {
-    console.log("lm", lm)
     const html = Mustache.render(loadTemplate, {
       username: lm.username,
       load: lm.text,
       createdAt: moment(lm.createdAt).format("h:mm:ss a"),
     })
     messages2.insertAdjacentHTML("beforeend", html)
+    autoscroll()
+  })
+})
+
+socket.on("load cordmessages", (coordload) => {
+  coordload.forEach((lm) => {
+    const html = Mustache.render(coordloadTemplate, {
+      username: lm.username,
+      loadurl: lm.url,
+      createdAt: moment(lm.createdAt).format("h:mm:ss a"),
+    })
+    geocoords.insertAdjacentHTML("beforeend", html)
     autoscroll()
   })
 })

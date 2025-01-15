@@ -18,6 +18,7 @@
                 <!-- <ul id="messages"></ul> -->
                 <div id="geocoords" class="chat__messages"></div>
                 <div id="load" class="chat__messages"></div>
+                <div id="coordload" class="chat__messages"></div>
 
                 <div class="compose">
                         <form id="form" action="">
@@ -55,6 +56,18 @@
     <p>{{msg}}</p>
   </div>
 </template>
+
+<template id="coordload-template">
+  <div>
+    <p>
+      <span class="message__name">{{username}}</span>
+      <span class="message__meta">{{createdAt}}</span>
+    </p>
+    <p><a href="{{loadurl}}" target="_blank">Check my current location</a></p>
+  </div>
+</template>
+
+
 
 <template id="coordinates-template">
   <div>
