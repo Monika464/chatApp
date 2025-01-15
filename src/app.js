@@ -48,7 +48,7 @@ io.on("connection", (socket) => {
         createdAt: locationMessage.createdAt,
       })
       await coordMessage.save()
-      console.log("Coord message saved:", coordMessage)
+      // console.log("Coord message saved:", coordMessage)
       io.emit("coords message", generateLocation(user.username, url))
       callback("Delivered Geocode")
     } catch (error) {
@@ -73,7 +73,6 @@ io.on("connection", (socket) => {
       createdAt: 1,
     })
 
-    // console.log("gdzie messages", messages)
     try {
       socket.emit("load messages", messages)
     } catch (error) {
